@@ -3,10 +3,7 @@ import pygame
 from pygame.locals import *
 
 WHITE = [255, 255, 255]
-
-def wait():
-	x = input()
-	pygame.quit()
+BLACK = [0,0,0]
 
 class Wall(pygame.sprite.Sprite):
 
@@ -34,11 +31,11 @@ class Room1(Room):
 	def __init__(self):
 		super().__init__()
 
-		walls = [[0, 0, 20, 200, WHITE],
-				 [0, 200, -200, 20, WHITE],
-				 [200, 0, 20, 200, WHITE],
-				 [200, 200, -200, 20, WHITE],
-				]
+		walls = [[0, 0, 20, 600, WHITE],
+				   [0, 0, 800, 20, WHITE],
+				   [0, 580, 800, 20, WHITE],
+				   [780, 0, 20, 800, WHITE]
+				  ]
 
 		for item in walls:
 			wall = Wall(item[0], item[1], item[2], item[3], item[4])
@@ -58,7 +55,7 @@ class Player(pygame.sprite.Sprite):
  
 		# Set height, width
 		self.image = pygame.Surface([15, 15])
-		self.image.fill([255,255,255])
+		self.image.fill(WHITE)
  
 		# Make our top-left corner the passed-in location.
 		self.rect = self.image.get_rect()
@@ -105,35 +102,57 @@ def main():
 	pygame.init()
 
 	screen = pygame.display.set_mode([800, 600])
+	# screen.fill(BLACK)
+	pygame.display.set_caption("YEET OR YANT")
+	pygame.display.update()
 
 	room = Room()
 
 	player = Player(50,50)
 
-	while True:
+	moving_sprites = pygame.sprite.Group()
+	moving_sprites.add(player)
 
-		wait()
+	room = Room1()
 
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_LEFT:
-				player.changespeed(-5, 0)
-			if event.key == pygame.K_RIGHT:
-				player.changespeed(5, 0)
-			if event.key == pygame.K_UP:
-				player.changespeed(0, -5)
-			if event.key == pygame.K_DOWN:
-				player.changespeed(0, 5)
+	pygame.display.update()
+	done = False
 
-		if event.type == pygame.KEYUP:
-			if event.key == pygame.K_LEFT:
-				player.changespeed(5, 0)
-			if event.key == pygame.K_RIGHT:
-				player.changespeed(-5, 0)
-			if event.key == pygame.K_UP:
-				player.changespeed(0, 5)
-			if event.key == pygame.K_DOWN:
-				player.changespeed(0, -5)
+	while not done:
 
+		for event in pygame.event.get():
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_q:
+					done = True
+
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_LEFT:
+					player.changespeed(-5, 0)
+				if event.key == pygame.K_RIGHT:
+					player.changespeed(5, 0)
+				if event.key == pygame.K_UP:
+					player.changespeed(0, -5)
+				if event.key == pygame.K_DOWN:
+					player.changespeed(0, 5)
+
+			if event.type == pygame.KEYUP:
+				if event.key == pygame.K_LEFT:
+					player.changespeed(5, 0)
+				if event.key == pygame.K_RIGHT:
+					player.changespeed(-5, 0)
+				if event.key == pygame.K_UP:
+					player.changespeed(0, 5)
+				if event.key == pygame.K_DOWN:
+					player.changespeed(0, -5)
+
+		player.move(room.wall_list)
+
+		screen.fill(BLACK)
+		moving_sprites.draw(screen)
+		room.wall_list.draw(screen)
+		pygame.display.flip()
+
+	pygame.quit()
 
 
 if __name__ == "__main__":
