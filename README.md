@@ -1,2 +1,2 @@
 # wecanchangethis
-A simple pygame.
+A simple pygame similar to binding of isaac or undertale.
